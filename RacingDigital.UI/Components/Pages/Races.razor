@@ -1,0 +1,122 @@
+@page "/races"
+@using RacingDigital.Models
+@attribute [StreamRendering]
+@inject HttpClient Http
+@inject ApiSettings ApiSettings
+
+
+
+<PageTitle>@pageTitle</PageTitle>
+
+<h1>@pageTitle</h1>
+
+<div>
+@if(raceResults != null && raceResults.Any())
+    {
+       @*  <QuickGrid Items="raceResults" Class="table table-striped table-hover quickgrid-custom" style="width: 100%">
+            <PropertyColumn Property="@(r => r.Race)" Title="Race" Sortable="true" />
+           @*  <PropertyColumn Property="@(d=> d.AcctNo)" Title="Account No." Sortable="true"/>
+            <PropertyColumn Property="@(d=> d.DealerName)" Title="Name" Sortable="true" />
+            <PropertyColumn Property="@(d=> d.Market)" Title="Market" Sortable="true" />
+            <PropertyColumn Property="@(d=> d.WarehouseCode)" Title="Warehouse Code" Sortable="true" />
+            <PropertyColumn Property="@(d=> d.VendorCode)" Title="Vendor Code" Sortable="true" />
+            <TemplateColumn Title="ACM Email" Sortable="true">
+                <a href="mailto:@context.ACMEmailAddress">@context.ACMEmailAddress</a>
+            </TemplateColumn>
+            <PropertyColumn Property="@(d=> d.LastReplenishmentDate)" Title="Last Replenishment Date" Sortable="true" />
+            <TemplateColumn Title="Replenish">
+                <input type="checkbox" checked="@context.Replenish"
+                       @onchange="(e) => OnCheckboxChanged(e, context)" />
+            </TemplateColumn> 
+        </QuickGrid> *@
+    <table class="table table-striped table-hover">
+        <thead>
+            <tr>
+                <th>Race</th>
+                <th>Notes</th>
+             @*    <th>Account No.</th>
+                <th>Name</th>
+                <th>Market</th>
+                <th>Warehouse<br />Code</th>
+                <th>Vendor Code</th>
+                <th>ACM Email</th>
+                <th>Last Replenishment Date</th>
+                <th>Replenish</th> *@
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var raceResult in raceResults)
+            {
+                    <tr>
+                        <td>@raceResult.Race</td>
+                        <td>
+                            <input type="checkbox"
+                                   checked="@raceResult.Note"
+                                   @onchange="(e) => OnCheckboxChanged(e, raceResult)" />
+                        </td>
+                       @*  <td>
+                            <input type="button" value="Notes" @onclick="() => AddNotes(race)" />
+                        </td> *@
+                    </tr>
+            }
+        </tbody>
+    </table> 
+} 
+</div>
+
+@code {
+    private string pageTitle = "Races";
+
+    List<RaceResult> raceResults = new List<RaceResult>();
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            raceResults = await Http.GetFromJsonAsync<List<RaceResult>>($"{ApiSettings.RacingDigitalWebAPI}Races");
+
+        }
+
+        catch (Exception ex)
+        {
+            //TO DO Error handling
+        }
+
+    }
+
+    private async Task OnCheckboxChanged(ChangeEventArgs e, RaceResult item)
+    {
+
+    }
+
+    private async Task AddNotes(RaceResult item)
+    {
+        // try
+        // {
+        //     item.Replenish = (bool)(e.Value??0);
+
+        //     string url = $"SsdDealer/UpdateSsdDealer/{item.DealerSiteID}/{item.Replenish}";
+
+        //     var result = await ApiService.CallApiPutAsync(AppConstants.PortalWebApi, url, null);
+
+        //     if (!result)
+        //     {
+        //         await ShowErrorAsync();
+        //     }
+        //     else{
+        //         await ShowSuccessAsync();
+        //     }
+
+
+        // }
+        // catch (Exception ex)
+        // {
+        //     await ShowErrorAsync($"SSD Dealers update failed: {ex.Message}");
+        // }
+    }
+
+  
+   
+
+}
+
+
